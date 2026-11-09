@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administración — Tauros Barbería</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- ============ ACCESO (RF-07) ============ -->
+  <section class="login" id="login">
+    <div class="login-card">
+      <div class="login-logo"><i class="fa-solid fa-bull"></i></div>
+      <h1>Panel de administración</h1>
+      <p id="login-sub">Ingresa la contraseña para continuar.</p>
+      <form id="form-login">
+        <div class="campo" id="campo-email">
+          <label for="correo-admin">Correo electrónico</label>
+          <input type="email" id="correo-admin" placeholder="admin@tauros.com" autocomplete="username">
+        </div>
+        <div class="campo">
+          <label for="clave-admin">Contraseña</label>
+          <input type="password" id="clave-admin" placeholder="••••••••" autocomplete="current-password" required>
+          <small class="campo-error" id="error-login"></small>
+        </div>
+        <button type="submit" class="btn btn-dorado btn-grande btn-ancho">
+          <i class="fa-solid fa-right-to-bracket"></i> Ingresar
+        </button>
+      </form>
+      <a class="login-volver" href="index.html"><i class="fa-solid fa-arrow-left"></i> Volver a la página principal</a>
+    </div>
+  </section>
+
+  <!-- ============ PANEL ============ -->
+  <div class="admin-layout" id="panel" hidden>
+
+    <aside class="admin-sidebar">
+      <div class="admin-marca">
+        <i class="fa-solid fa-bull"></i>
+        <span>TAUROS <em>Admin</em></span>
+      </div>
+      <nav class="admin-nav" id="admin-nav">
+        <button class="admin-nav-item activo" data-seccion="barberos">
+          <i class="fa-solid fa-users"></i> Barberos <span class="badge-nav" id="badge-barberos">0</span>
+        </button>
+        <button class="admin-nav-item" data-seccion="horarios">
+          <i class="fa-solid fa-clock"></i> Horarios
+        </button>
+        <button class="admin-nav-item" data-seccion="citas">
+          <i class="fa-solid fa-calendar-check"></i> Citas <span class="badge-nav" id="badge-citas">0</span>
+        </button>
+      </nav>
+      <div class="admin-sidebar-pie">
+        <a href="index.html"><i class="fa-solid fa-globe"></i> Ver sitio</a>
+        <button id="btn-salir"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- ---------- SECCIÓN: BARBEROS (RF-08, RF-09, RF-12) ---------- -->
+      <section class="admin-seccion" id="sec-barberos">
+        <div class="admin-titulo">
+          <div>
+            <h2>Barberos</h2>
+            <p>Registra barberos, asígnales una silla y cambia su disponibilidad.</p>
+          </div>
+          <button class="btn btn-dorado" id="btn-nuevo-barbero">
+            <i class="fa-solid fa-plus"></i> Nuevo barbero
+          </button>
+        </div>
+
+        <!-- Formulario crear/editar -->
+        <div class="admin-card" id="form-barbero-card" hidden>
+          <h3 id="form-barbero-titulo">Registrar barbero</h3>
+          <form id="form-barbero">
+            <input type="hidden" id="barbero-id">
+            <div class="form-grid">
+              <div class="campo">
+                <label for="barbero-nombre">Nombre completo <span class="req">*</span></label>
+                <input type="text" id="barbero-nombre" placeholder="Ej: Carlos Rodríguez" required>
+              </div>
+              <div class="campo">
+                <label for="barbero-especialidad">Especialidad / descripción</label>
+                <input type="text" id="barbero-especialidad" placeholder="Ej: Cortes clásicos y fade">
+              </div>
+              <div class="campo">
+                <label for="barbero-silla">Silla asignada <span class="req">*</span></label>
+                <select id="barbero-silla"></select>
+                <small class="campo-ayuda">Solo se muestran sillas sin ocupar.</small>
+              </div>
+            </div>
+            <div class="form-acciones">
+              <button type="submit" class="btn btn-dorado"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+              <button type="button" class="btn btn-fantasma" id="btn-cancelar-barbero">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Listado (RF-09) -->
+        <div class="admin-card">
+          <div class="tabla-scroll">
+            <table class="tabla" id="tabla-barberos">
+              <thead>
+                <tr>
+                  <th>Silla</th>
+                  <th>Barbero</th>
+                  <th>Especialidad</th>
+                  <th>Estado</th>
+                  <th class="th-acciones">Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="tabla-vacia" id="barberos-vacio" hidden>
+            <i class="fa-solid fa-users-slash"></i>
+            <p>No hay barberos registrados aún.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- SECCIÓN: HORARIOS (RF-10) ---------- -->
+      <section class="admin-seccion" id="sec-horarios" hidden>
+        <div class="admin-titulo">
+          <div>
+            <h2>Horarios de trabajo</h2>
+            <p>Define la jornada de cada barbero por día. El sistema genera los slots con estos datos.</p>
+          </div>
+          <div class="campo campo-inline">
+            <label for="select-barbero-horario">Barbero:</label>
+            <select id="select-barbero-horario"></select>
+          </div>
+        </div>
+
+        <div class="admin-card" id="horarios-card">
+          <div class="tabla-scroll">
+            <table class="tabla tabla-horarios" id="tabla-horarios">
+              <thead>
+                <tr>
+                  <th>Día</th>
+                  <th>Activo</th>
+                  <th>Hora inicio</th>
+                  <th>Hora fin</th>
+                  <th>Duración (min)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="form-acciones">
+            <button class="btn btn-dorado" id="btn-guardar-horarios">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar horarios
+            </button>
+          </div>
+          <div class="tabla-vacia" id="horarios-vacio" hidden>
+            <i class="fa-solid fa-users"></i>
+            <p>Primero registra un barbero para asignarle horarios.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- SECCIÓN: CITAS (RF-11) ---------- -->
+      <section class="admin-seccion" id="sec-citas" hidden>
+        <div class="admin-titulo">
+          <div>
+            <h2>Citas agendadas</h2>
+            <p>Consulta las reservas filtrando por fecha o barbero.</p>
+          </div>
+        </div>
+
+        <div class="filtros">
+          <div class="campo campo-inline">
+            <label for="filtro-fecha">Fecha:</label>
+            <input type="date" id="filtro-fecha">
+          </div>
+          <div class="campo campo-inline">
+            <label for="filtro-barbero">Barbero:</label>
+            <select id="filtro-barbero">
+              <option value="">Todos</option>
+            </select>
+          </div>
+          <div class="campo campo-inline">
+            <label for="filtro-estado">Estado:</label>
+            <select id="filtro-estado">
+              <option value="">Todos</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="completada">Completada</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+          <button class="btn btn-fantasma" id="btn-limpiar-filtros">Limpiar</button>
+        </div>
+
+        <div class="admin-card">
+          <div class="tabla-scroll">
+            <table class="tabla" id="tabla-citas">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Cliente</th>
+                  <th>Barbero</th>
+                  <th>Estado</th>
+                  <th class="th-acciones">Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="tabla-vacia" id="citas-vacio" hidden>
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <p>No hay citas que coincidan con los filtros.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/supa.js"></script>
+  <script src="js/slots.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

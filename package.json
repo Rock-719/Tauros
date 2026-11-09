@@ -1,0 +1,8 @@
+{
+  "name": "tauros-barberia",
+  "version": "1.0.0",
+  "description": "Sistema de agendamiento de citas - Tauros Barbería (HTML/CSS/JS + Supabase)",
+  "scripts": {
+    "start": "python -m http.server 8080"
+  }
+}

@@ -1,0 +1,19 @@
+# Dependencias / entornos
+node_modules/
+.venv/
+venv/
+.env
+.env.*
+
+# Despliegue
+.vercel/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
